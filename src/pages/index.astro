@@ -67,6 +67,7 @@
 					<div class="image-container">
 						<img src="/assets/aww-blushing.gif" alt="Happy dance" class="success-gif"/>
 					</div>
+					<button id="reset-btn" class="btn-reset">Start Over 🔄</button>
 				</div>
 			</div>
 		</main>
@@ -297,6 +298,8 @@
 			};
 
 			const handleSuccess = () => {
+				localStorage.setItem('valentine_accepted', 'true'); // Save state
+
 				if(proposalSection) proposalSection.style.display = 'none';
 				if(successSection) successSection.classList.remove('hidden');
 
@@ -329,8 +332,21 @@
 			// Yes button wins
 			yesBtn?.addEventListener('click', handleSuccess);
 
+			// Reset / Start Over
+			const resetBtn = document.getElementById('reset-btn');
+			resetBtn?.addEventListener('click', () => {
+				localStorage.removeItem('valentine_accepted');
+				window.location.reload();
+			});
+
 			// --- INIT ---
-			renderQuestion();
+			// Check for saved success state
+			if (localStorage.getItem('valentine_accepted') === 'true') {
+				if(quizSection) quizSection.classList.add('hidden');
+				if(successSection) successSection.classList.remove('hidden');
+			} else {
+				renderQuestion();
+			}
 
 			// --- HEARTS & ROSES BACKGROUND ---
 			const heartsContainer = document.getElementById('hearts-container');
@@ -521,6 +537,25 @@
 		background-color: #fff0f3;
 		color: var(--text);
 		box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+	}
+
+	.btn-reset {
+		background: transparent;
+		border: 1px solid rgba(255, 77, 109, 0.3);
+		color: var(--text);
+		padding: 0.5rem 1rem;
+		border-radius: 20px;
+		font-size: 0.9rem;
+		margin-top: 2rem;
+		cursor: pointer;
+		opacity: 0.7;
+		transition: all 0.2s;
+	}
+
+	.btn-reset:hover {
+		opacity: 1;
+		background: rgba(255, 255, 255, 0.5);
+		transform: scale(1.05);
 	}
 </style>
 
