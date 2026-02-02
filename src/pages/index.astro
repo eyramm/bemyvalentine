@@ -20,6 +20,7 @@
 		<main>
 			<!-- STEP 1: QUIZ -->
 			<div id="quiz-section" class="card">
+				<h1 id="quiz-title" class="title">Compatibility Quiz</h1>
 				<div class="progress-bar">
 					<div id="progress-fill" class="progress-fill"></div>
 				</div>
@@ -44,7 +45,7 @@
 			<div id="proposal-section" class="card hidden">
 				<div class="content">
 					<div id="result-badge" class="badge hidden">Match: 1000% ❤️</div>
-					<h1 class="title">Will you be my Valentine? 🌹</h1>
+					<h1 id="proposal-title" class="title">Will you be my Valentine? 🌹</h1>
 					<p class="subtitle">Science says we're perfect together!</p>
 					
 					<div class="gif-container">
@@ -72,6 +73,21 @@
 
 		<script>
 			import confetti from 'canvas-confetti';
+
+			// --- URL PARAMS FOR PERSONALIZATION ---
+			const urlParams = new URLSearchParams(window.location.search);
+			const partnerName = urlParams.get('name');
+
+			if (partnerName) {
+				document.title = `Question for ${partnerName} ❤️`;
+				
+				const quizTitle = document.getElementById('quiz-title');
+				if (quizTitle) quizTitle.innerText = `Quiz for ${partnerName} ❤️`;
+
+				const proposalTitle = document.getElementById('proposal-title');
+				if (proposalTitle) proposalTitle.innerText = `${partnerName}, be my Valentine? 🌹`;
+			}
+
 
 			// --- STATE MANAGEMENT ---
 			const state = {
