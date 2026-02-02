@@ -1,0 +1,211 @@
+---
+// src/pages/index.astro
+---
+
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+		<meta name="viewport" content="width=device-width" />
+		<meta name="generator" content={Astro.generator} />
+		<title>A Question for You ❤️</title>
+		<!-- Google Fonts -->
+		<link rel="preconnect" href="https://fonts.googleapis.com">
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+		<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Pacifico&display=swap" rel="stylesheet">
+	</head>
+	<body>
+		<div class="background">
+			<!-- Floating hearts background elements could go here -->
+		</div>
+
+		<main>
+			<div class="card" id="question-card">
+				<div class="content">
+					<h1 class="title">Will you be my Valentine? 🌹</h1>
+					<p class="subtitle">I promise to buy you chocolates!</p>
+					
+					<div class="buttons">
+						<button id="yes-btn" class="btn btn-yes">Yes, definitely!</button>
+						<button id="no-btn" class="btn btn-no">No</button>
+					</div>
+				</div>
+			</div>
+
+			<div class="card hidden" id="success-card">
+				<div class="content">
+					<h1 class="title">Yay! ❤️</h1>
+					<p class="subtitle">Best decision ever! See you on the 14th!</p>
+					<div class="image-container">
+						<img src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExM3R6eW55b3R6eW55b3R6eW55b3R6eW55b3R6eW55b3R6eW55b3/26BRv0ThflsKCqLXG/giphy.gif" alt="Happy dance" class="success-gif"/>
+					</div>
+				</div>
+			</div>
+		</main>
+
+		<script>
+			import confetti from 'canvas-confetti';
+
+			const yesBtn = document.getElementById('yes-btn');
+			const noBtn = document.getElementById('no-btn');
+			const questionCard = document.getElementById('question-card');
+			const successCard = document.getElementById('success-card');
+
+			// "No" button dodging logic
+			noBtn?.addEventListener('mouseenter', () => {
+				const x = Math.random() * (window.innerWidth - noBtn.offsetWidth);
+				const y = Math.random() * (window.innerHeight - noBtn.offsetHeight);
+				
+				noBtn.style.position = 'fixed';
+				noBtn.style.left = `${x}px`;
+				noBtn.style.top = `${y}px`;
+			});
+
+			// Also dodge on click just in case
+			noBtn?.addEventListener('click', (e) => {
+				e.preventDefault();
+				const x = Math.random() * (window.innerWidth - noBtn.offsetWidth);
+				const y = Math.random() * (window.innerHeight - noBtn.offsetHeight);
+				
+				noBtn.style.position = 'fixed';
+				noBtn.style.left = `${x}px`;
+				noBtn.style.top = `${y}px`;
+			});
+
+			// "Yes" button celebration logic
+			yesBtn?.addEventListener('click', () => {
+				// Hide question, show success
+				if(questionCard) questionCard.style.display = 'none';
+				if(successCard) successCard.classList.remove('hidden');
+
+				// Confetti explosion
+				const duration = 15 * 1000;
+				const animationEnd = Date.now() + duration;
+				const defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 0 };
+
+				const randomInRange = (min, max) => Math.random() * (max - min) + min;
+
+				const interval = setInterval(function() {
+					const timeLeft = animationEnd - Date.now();
+
+					if (timeLeft <= 0) {
+						return clearInterval(interval);
+					}
+
+					const particleCount = 50 * (timeLeft / duration);
+					
+					// since particles fall down, start a bit higher than random
+					confetti({ ...defaults, particleCount, origin: { x: randomInRange(0.1, 0.3), y: Math.random() - 0.2 } });
+					confetti({ ...defaults, particleCount, origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 } });
+				}, 250);
+			});
+		</script>
+	</body>
+</html>
+
+<style>
+	:root {
+		--bg-color: #ffe6ea;
+		--primary: #ff4d6d;
+		--secondary: #ff8fa3;
+		--text: #590d22;
+		--white: #ffffff;
+	}
+
+	body {
+		margin: 0;
+		font-family: 'Inter', sans-serif;
+		background: linear-gradient(135deg, var(--bg-color) 0%, #ffc2d1 100%);
+		min-height: 100vh;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		overflow: hidden; /* Prevent scrollbars when button moves */
+	}
+
+	main {
+		z-index: 10;
+		padding: 2rem;
+		width: 100%;
+		max-width: 500px;
+	}
+
+	.card {
+		background: rgba(255, 255, 255, 0.6);
+		backdrop-filter: blur(10px);
+		border-radius: 24px;
+		padding: 3rem 2rem;
+		box-shadow: 0 8px 32px rgba(255, 77, 109, 0.2);
+		border: 1px solid rgba(255, 255, 255, 0.8);
+		text-align: center;
+		transition: transform 0.3s ease;
+	}
+
+	.card:hover {
+		transform: translateY(-5px);
+	}
+
+	.hidden {
+		display: none;
+	}
+
+	.title {
+		font-family: 'Pacifico', cursive;
+		font-size: 3rem;
+		color: var(--primary);
+		margin: 0 0 1rem 0;
+		line-height: 1.2;
+		text-shadow: 2px 2px 0px rgba(255,255,255,0.5);
+	}
+
+	.subtitle {
+		font-size: 1.2rem;
+		color: var(--text);
+		margin-bottom: 2.5rem;
+		font-weight: 500;
+	}
+
+	.buttons {
+		display: flex;
+		gap: 1.5rem;
+		justify-content: center;
+		align-items: center;
+		position: relative; /* Context for absolute positioning if needed inside, though likely button goes fixed */
+	}
+
+	.btn {
+		border: none;
+		padding: 1rem 2rem;
+		font-size: 1.1rem;
+		font-weight: 600;
+		border-radius: 50px;
+		cursor: pointer;
+		transition: transform 0.2s, box-shadow 0.2s;
+	}
+
+	.btn-yes {
+		background-color: var(--primary);
+		color: white;
+		box-shadow: 0 4px 15px rgba(255, 77, 109, 0.4);
+	}
+
+	.btn-yes:hover {
+		transform: scale(1.05);
+		background-color: #d90429;
+		box-shadow: 0 6px 20px rgba(255, 77, 109, 0.6);
+	}
+
+	.btn-no {
+		background-color: #fff0f3;
+		color: var(--text);
+		box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+	}
+
+	/* Success State Styles */
+	.success-gif {
+		width: 100%;
+		border-radius: 16px;
+		margin-top: 1.5rem;
+		box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+	}
+</style>
