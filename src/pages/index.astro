@@ -489,15 +489,11 @@ END:VCALENDAR`;
 
 	.options-grid {
 		display: grid;
-		grid-template-columns: 1fr; /* Default mobile: 1 column */
+		grid-template-columns: 1fr 1fr; /* 2x2 Grid EVERYWHERE (Mobile included) */
 		gap: 1rem;
 	}
 	
-	@media (min-width: 480px) {
-		.options-grid {
-			grid-template-columns: 1fr 1fr; /* 2 columns on tablet/desktop */
-		}
-	}
+	/* No media query needed for grid columns anymore */
 
 	.option-btn {
 		background: rgba(255, 255, 255, 0.85);
@@ -683,33 +679,28 @@ END:VCALENDAR`;
 		display: flex;
 		justify-content: center;
 		align-items: center;
-		overflow-y: auto;
-		overflow-x: hidden;
+		overflow: hidden; /* Force one-page feel */
 	}
 
-	/* Mobile Optimizations to fit 4 options */
-	@media (max-width: 480px) {
-		body {
-			align-items: flex-start; /* Prevent top clipping on small screens */
-			padding-top: 2rem;
-			padding-bottom: 2rem;
-		}
+	/* COMPACT MOBILE OPTIMIZATIONS */
+	@media (max-width: 600px) {
+		main { padding: 1rem; width: 100%; }
+		.card { padding: 1.5rem 1rem !important; }
 		
-		main {
-			padding: 1rem !important;
-		}
-
-		.card {
-			padding: 1.5rem 1.25rem !important;
-		}
-
-		.question-text {
-			font-size: 1.2rem !important;
-			margin-bottom: 1.2rem !important;
-		}
+		.title { font-size: 1.8rem !important; margin-bottom: 0.5rem !important; }
+		.subtitle { font-size: 1rem !important; margin-bottom: 1rem !important; }
+		.question-text { font-size: 1.2rem !important; margin-bottom: 1rem !important; }
 		
-		.question-gif {
-			height: 140px !important;
+		/* Shrink GIF on mobile to save space */
+		.question-gif { height: 130px !important; }
+		.feedback-gif { height: 130px !important; }
+		
+		/* Ensure buttons fit well */
+		.options-grid { gap: 0.8rem !important; }
+		.option-btn { 
+			padding: 0.8rem !important; 
+			min-height: 60px !important; 
+			font-size: 0.9rem !important; 
 		}
 	}
 
