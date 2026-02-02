@@ -8,22 +8,44 @@
 		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 		<meta name="viewport" content="width=device-width" />
 		<meta name="generator" content={Astro.generator} />
-		<title>A Question for You ❤️</title>
+		<title>Our Love Calculation ❤️</title>
 		<!-- Google Fonts -->
 		<link rel="preconnect" href="https://fonts.googleapis.com">
 		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 		<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Pacifico&display=swap" rel="stylesheet">
 	</head>
 	<body>
-		<div class="background">
-			<!-- Floating hearts could go here -->
-		</div>
+		<div id="hearts-container" class="hearts-container"></div>
 
 		<main>
-			<div class="card" id="question-card">
+			<!-- STEP 1: QUIZ -->
+			<div id="quiz-section" class="card">
+				<div class="progress-bar">
+					<div id="progress-fill" class="progress-fill"></div>
+				</div>
+				
+				<div id="question-container" class="content">
+					<!-- Questions injected via JS -->
+				</div>
+			</div>
+
+			<!-- STEP 2: CALCULATING -->
+			<div id="calculating-section" class="card hidden">
 				<div class="content">
+					<h1 class="title">Calculating Compatibility...</h1>
+					<div class="love-meter-container">
+						<div class="love-meter-fill" id="love-meter-fill">0%</div>
+					</div>
+					<p id="calculating-text" class="subtitle">Analyzing joy factors...</p>
+				</div>
+			</div>
+
+			<!-- STEP 3: PROPOSAL (Original App) -->
+			<div id="proposal-section" class="card hidden">
+				<div class="content">
+					<div id="result-badge" class="badge hidden">Match: 1000% ❤️</div>
 					<h1 class="title">Will you be my Valentine? 🌹</h1>
-					<p class="subtitle">I promise to buy you chocolates!</p>
+					<p class="subtitle">Science says we're perfect together!</p>
 					
 					<div class="gif-container">
 						<img id="main-gif" src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExM3R6eW55b3R6eW55b3R6eW55b3R6eW55b3R6eW55b3R6eW55b3/uTj883pL53y4t8q2pC/giphy.gif" alt="Cute puppy" />
@@ -36,7 +58,8 @@
 				</div>
 			</div>
 
-			<div class="card hidden" id="success-card">
+			<!-- STEP 4: SUCCESS -->
+			<div id="success-section" class="card hidden">
 				<div class="content">
 					<h1 class="title">Yay! ❤️</h1>
 					<p class="subtitle">Best decision ever! See you on the 14th!</p>
@@ -50,16 +73,145 @@
 		<script>
 			import confetti from 'canvas-confetti';
 
+			// --- STATE MANAGEMENT ---
+			const state = {
+				currentQuestionIndex: 0,
+				answers: []
+			};
+
+			// --- DOM ELEMENTS ---
+			const quizSection = document.getElementById('quiz-section');
+			const calculatingSection = document.getElementById('calculating-section');
+			const proposalSection = document.getElementById('proposal-section');
+			const successSection = document.getElementById('success-section');
+			
+			const questionContainer = document.getElementById('question-container');
+			const progressFill = document.getElementById('progress-fill');
+			
 			const yesBtn = document.getElementById('yes-btn');
 			const noBtn = document.getElementById('no-btn');
-			const questionCard = document.getElementById('question-card');
-			const successCard = document.getElementById('success-card');
 			const mainGif = document.getElementById('main-gif') as HTMLImageElement;
 
+			// --- DATA ---
+			const questions = [
+				{
+					question: "How many times a day do I make you smile or laugh? 😄",
+					options: [
+						"A ridiculous amount",
+						"Are you kidding? Constantly!",
+						"Every single time we talk",
+						"Too many to count"
+					],
+					reaction: "Your daily joy factor is off the charts! 📈"
+				},
+				{
+					question: "On a scale of 1 to 10, how good are our cuddles? 🧸",
+					options: [
+						"10/10",
+						"100/10",
+						"Infinity/10",
+						"We practically melt together"
+					],
+					reaction: "Cuddle compatibility confirmed! 🥰"
+				},
+				{
+					question: "If we were a movie genre, what would we be? 🎬",
+					options: [
+						"Romantic Comedy",
+						"Epic Adventure",
+						"Fairytale Romance",
+						"All of the above"
+					],
+					reaction: "A perfect love story! ✨"
+				}
+			];
+
+			// --- FUNCTIONS ---
+
+			function renderQuestion() {
+				if (!questionContainer || !progressFill) return;
+
+				const q = questions[state.currentQuestionIndex];
+				
+				// Update Progress
+				const progress = ((state.currentQuestionIndex) / questions.length) * 100;
+				progressFill.style.width = `${progress}%`;
+
+				// Render
+				questionContainer.innerHTML = `
+					<h2 class="question-text">${q.question}</h2>
+					<div class="options-grid">
+						${q.options.map((opt, idx) => `
+							<button class="option-btn" data-idx="${idx}">${opt}</button>
+						`).join('')}
+					</div>
+				`;
+
+				// Attach listeners
+				document.querySelectorAll('.option-btn').forEach(btn => {
+					btn.addEventListener('click', () => handleAnswer());
+				});
+			}
+
+			function handleAnswer() {
+				state.currentQuestionIndex++;
+				
+				if (state.currentQuestionIndex < questions.length) {
+					renderQuestion();
+				} else {
+					startCalculation();
+				}
+			}
+
+			function startCalculation() {
+				if(quizSection) quizSection.classList.add('hidden');
+				if(calculatingSection) calculatingSection.classList.remove('hidden');
+
+				const meterFill = document.getElementById('love-meter-fill');
+				const text = document.getElementById('calculating-text');
+				
+				let percent = 0;
+				const interval = setInterval(() => {
+					percent += Math.floor(Math.random() * 5) + 1;
+					if (percent > 100) percent = 100;
+					
+					if (meterFill) {
+						meterFill.style.width = `${percent}%`;
+						meterFill.innerText = `${percent}%`;
+					}
+
+					// Random flavor text
+					if (percent > 20 && percent < 40 && text) text.innerText = "Analyzing laughter frequency...";
+					if (percent > 50 && percent < 70 && text) text.innerText = "Measuring cuddle density...";
+					if (percent > 80 && text) text.innerText = "Computing soulmate status...";
+
+					if (percent >= 100) {
+						clearInterval(interval);
+						// Explosion effect!
+						confetti({
+							particleCount: 100,
+							spread: 70,
+							origin: { y: 0.6 }
+						});
+						
+						setTimeout(showProposal, 1500);
+					}
+				}, 50);
+			}
+
+			function showProposal() {
+				if(calculatingSection) calculatingSection.classList.add('hidden');
+				if(proposalSection) {
+					proposalSection.classList.remove('hidden');
+					const badge = document.getElementById('result-badge');
+					if(badge) badge.classList.remove('hidden');
+				}
+			}
+
+			// --- PROPOSAL LOGIC (Previous Code) ---
 			const HAPPY_GIF = "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExM3R6eW55b3R6eW55b3R6eW55b3R6eW55b3R6eW55b3R6eW55b3/uTj883pL53y4t8q2pC/giphy.gif";
 			const SAD_GIF = "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExM3R6eW55b3R6eW55b3R6eW55b3R6eW55b3R6eW55b3R6eW55b3/OPU6wzx8JrHna/giphy.gif";
 
-			// "No" button dodging logic
 			let isDodging = false;
 			const dodge = () => {
 				const x = Math.random() * (window.innerWidth - (noBtn?.offsetWidth || 100));
@@ -83,42 +235,65 @@
 				dodge();
 			});
 
-			// Reset gif if they stop chasing the button for a while?
-			// Simpler: If they hover the YES button, make the dog happy again
 			yesBtn?.addEventListener('mouseenter', () => {
 				if(mainGif) mainGif.src = HAPPY_GIF;
 				isDodging = false;
 			});
 
-			// "Yes" button celebration logic
 			yesBtn?.addEventListener('click', () => {
-				// Hide question, show success
-				if(questionCard) questionCard.style.display = 'none';
-				if(successCard) successCard.classList.remove('hidden');
+				if(proposalSection) proposalSection.style.display = 'none';
+				if(successSection) successSection.classList.remove('hidden');
 
-				// Confetti explosion
 				const duration = 15 * 1000;
 				const animationEnd = Date.now() + duration;
 				const defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 0 };
-
 				const randomInRange = (min, max) => Math.random() * (max - min) + min;
 
 				const interval = setInterval(function() {
 					const timeLeft = animationEnd - Date.now();
-
-					if (timeLeft <= 0) {
-						return clearInterval(interval);
-					}
-
+					if (timeLeft <= 0) return clearInterval(interval);
 					const particleCount = 50 * (timeLeft / duration);
-					
 					confetti({ ...defaults, particleCount, origin: { x: randomInRange(0.1, 0.3), y: Math.random() - 0.2 } });
 					confetti({ ...defaults, particleCount, origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 } });
 				}, 250);
 			});
+
+			// --- INIT ---
+			renderQuestion();
+
+			// --- HEARTS BACKGROUND ---
+			const heartsContainer = document.getElementById('hearts-container');
+			const createHeart = () => {
+				const heart = document.createElement('div');
+				heart.classList.add('heart');
+				heart.innerHTML = '❤️';
+				heart.style.left = Math.random() * 100 + 'vw';
+				heart.style.animationDuration = Math.random() * 3 + 2 + 's';
+				heart.style.fontSize = Math.random() * 1.5 + 0.5 + 'rem';
+				heartsContainer?.appendChild(heart);
+				setTimeout(() => heart.remove(), 5000);
+			};
+			setInterval(createHeart, 300);
+
 		</script>
 	</body>
 </html>
+
+<style is:global>
+	.heart {
+		position: fixed;
+		top: -10vh;
+		user-select: none;
+		pointer-events: none;
+		z-index: 0;
+		animation: fall linear forwards;
+		opacity: 0.7;
+	}
+	@keyframes fall {
+		0% { transform: translateY(0) rotate(0deg); opacity: 1; }
+		100% { transform: translateY(110vh) rotate(360deg); opacity: 0; }
+	}
+</style>
 
 <style>
 	:root {
@@ -140,35 +315,46 @@
 		overflow: hidden;
 	}
 
+	.hearts-container {
+		position: fixed;
+		top: 0; left: 0; width: 100%; height: 100%;
+		pointer-events: none; z-index: 1;
+	}
+
 	main {
 		z-index: 10;
 		padding: 2rem;
 		width: 100%;
 		max-width: 500px;
+		position: relative;
 	}
 
 	.card {
-		background: rgba(255, 255, 255, 0.6);
-		backdrop-filter: blur(10px);
+		background: rgba(255, 255, 255, 0.65);
+		backdrop-filter: blur(12px);
 		border-radius: 24px;
-		padding: 3rem 2rem;
+		padding: 2.5rem 2rem;
 		box-shadow: 0 8px 32px rgba(255, 77, 109, 0.2);
 		border: 1px solid rgba(255, 255, 255, 0.8);
 		text-align: center;
-		transition: transform 0.3s ease;
+		transition: all 0.5s ease;
+		animation: fadeIn 0.5s ease-out;
+		width: 100%;
+		box-sizing: border-box;
 	}
 
-	.card:hover {
-		transform: translateY(-5px);
+	@keyframes fadeIn {
+		from { opacity: 0; transform: translateY(20px); }
+		to { opacity: 1; transform: translateY(0); }
 	}
 
 	.hidden {
-		display: none;
+		display: none !important;
 	}
 
 	.title {
 		font-family: 'Pacifico', cursive;
-		font-size: 3rem;
+		font-size: 2.5rem;
 		color: var(--primary);
 		margin: 0 0 1rem 0;
 		line-height: 1.2;
@@ -176,15 +362,113 @@
 	}
 
 	.subtitle {
-		font-size: 1.2rem;
+		font-size: 1.1rem;
 		color: var(--text);
 		margin-bottom: 2rem;
 		font-weight: 500;
 	}
 
+	/* QUIZ STYLES */
+	.progress-bar {
+		width: 100%;
+		height: 8px;
+		background: rgba(255, 255, 255, 0.5);
+		border-radius: 4px;
+		margin-bottom: 2rem;
+		overflow: hidden;
+	}
+	
+	.progress-fill {
+		height: 100%;
+		background: var(--primary);
+		width: 0%;
+		transition: width 0.3s ease;
+	}
+
+	.question-text {
+		font-size: 1.4rem;
+		color: var(--text);
+		margin-bottom: 2rem;
+		font-weight: 600;
+	}
+
+	.options-grid {
+		display: flex;
+		flex-direction: column;
+		gap: 1rem;
+	}
+
+	.option-btn {
+		background: rgba(255, 255, 255, 0.8);
+		border: 2px solid transparent;
+		padding: 1rem;
+		border-radius: 16px;
+		font-size: 1rem;
+		color: var(--text);
+		cursor: pointer;
+		font-weight: 500;
+		transition: all 0.2s ease;
+	}
+
+	.option-btn:hover {
+		background: white;
+		border-color: var(--secondary);
+		transform: scale(1.02);
+		box-shadow: 0 4px 12px rgba(255, 77, 109, 0.15);
+	}
+
+	.option-btn:active {
+		transform: scale(0.98);
+	}
+
+	/* CALCULATING STYLES */
+	.love-meter-container {
+		width: 100%;
+		height: 30px;
+		background: rgba(255, 255, 255, 0.5);
+		border-radius: 15px;
+		margin: 2rem 0;
+		overflow: hidden;
+		position: relative;
+		border: 2px solid var(--white);
+	}
+
+	.love-meter-fill {
+		height: 100%;
+		background: linear-gradient(90deg, var(--secondary), var(--primary));
+		width: 0%;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		color: white;
+		font-weight: bold;
+		font-size: 0.9rem;
+		transition: width 0.1s linear;
+	}
+
+	/* PROPOSAL STYLES */
+	.badge {
+		display: inline-block;
+		background: #ffecf0;
+		color: var(--primary);
+		padding: 0.5rem 1rem;
+		border-radius: 20px;
+		font-weight: bold;
+		font-size: 0.9rem;
+		margin-bottom: 1rem;
+		border: 1px solid var(--secondary);
+		animation: pulse 2s infinite;
+	}
+
+	@keyframes pulse {
+		0% { transform: scale(1); }
+		50% { transform: scale(1.05); }
+		100% { transform: scale(1); }
+	}
+
 	.gif-container {
 		margin-bottom: 2rem;
-		height: 200px; /* Fixed height to prevent layout jump */
+		height: 200px; 
 		display: flex;
 		align-items: center;
 		justify-content: center;
@@ -233,7 +517,6 @@
 		box-shadow: 0 4px 15px rgba(0,0,0,0.05);
 	}
 
-	/* Success State Styles */
 	.success-gif {
 		width: 100%;
 		border-radius: 16px;
