@@ -112,7 +112,7 @@
 			const questions = [
 				{
 					question: "How many times a day do I make you smile or laugh? 😄",
-					gif: "/assets/risitas.gif", // El Risitas
+					embed: '<iframe src="https://giphy.com/embed/kTCL4p7c4gDkc" width="100%" height="100%" style="position:absolute;top:0;left:0;" frameBorder="0" class="giphy-embed" allowFullScreen></iframe>',
 					options: [
 						"A ridiculous amount",
 						"Are you kidding? Constantly!",
@@ -123,7 +123,7 @@
 				},
 				{
 					question: "On a scale of 1 to 10, how good are our cuddles? 🧸",
-					gif: "/assets/cuddles.gif", // Cute cuddle
+					embed: '<iframe src="https://giphy.com/embed/l41lOD8U5gWzH6x4A" width="100%" height="100%" style="position:absolute;top:0;left:0;" frameBorder="0" class="giphy-embed" allowFullScreen></iframe>',
 					options: [
 						"10/10",
 						"100/10",
@@ -134,7 +134,7 @@
 				},
 				{
 					question: "If we were a movie genre, what would we be? 🎬",
-					gif: "/assets/movie.gif", // The Notebook Kiss
+					embed: '<iframe src="https://giphy.com/embed/26FLdmIp6wJr91JAI" width="100%" height="100%" style="position:absolute;top:0;left:0;" frameBorder="0" class="giphy-embed" allowFullScreen></iframe>',
 					options: [
 						"Romantic Comedy",
 						"Epic Adventure",
@@ -159,7 +159,7 @@
 				// Render
 				questionContainer.innerHTML = `
 					<h2 class="question-text">${q.question}</h2>
-					${q.gif ? `<div class="question-gif-container"><img src="${q.gif}" class="question-gif" alt="Question GIF" /></div>` : ''}
+					${q.embed ? `<div class="gif-embed-container">${q.embed}</div>` : ''}
 					<div class="options-grid">
 						${q.options.map((opt, idx) => `
 							<button class="option-btn" data-idx="${idx}">${opt}</button>
@@ -183,7 +183,7 @@
 				questionContainer.innerHTML = `
 					<div class="feedback-content">
 						<h2 class="points-text">+${randomPoints} Hearts! ❤️</h2>
-						${q.gif ? `<img src="${q.gif}" class="feedback-gif" alt="Reaction GIF" />` : ''}
+						${q.embed ? `<div class="gif-embed-container feedback-mode">${q.embed}</div>` : ''}
 						<p class="reaction-text">${q.reaction}</p>
 						<button id="next-question-btn" class="btn btn-yes">Next Question ➡️</button>
 					</div>
@@ -415,27 +415,22 @@
 		transform: scale(0.98);
 	}
 
-	/* GIF STYLES */
-	.question-gif-container {
-		display: flex;
-		justify-content: center;
-		margin-bottom: 1.5rem;
-	}
-
-	.question-gif {
-		max-width: 100%;
-		height: 180px; /* Fixed height for consistency */
-		object-fit: cover;
+	/* GIF EMBED STYLES */
+	.gif-embed-container {
+		width: 100%;
+		max-width: 480px;
+		height: 0;
+		padding-bottom: 75%; /* 4:3 Aspect Ratio approx */
+		position: relative;
+		margin: 0 auto 1.5rem auto;
 		border-radius: 12px;
+		overflow: hidden;
 		box-shadow: 0 4px 12px rgba(0,0,0,0.1);
 	}
 
-	.feedback-gif {
-		max-width: 100%;
-		height: 160px;
-		border-radius: 12px;
-		margin-bottom: 1rem;
-		box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+	.gif-embed-container.feedback-mode {
+		max-width: 300px;
+		padding-bottom: 60%; 
 	}
 
 	/* FEEDBACK STATE STYLES */
