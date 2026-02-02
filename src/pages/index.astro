@@ -112,6 +112,7 @@
 			const questions = [
 				{
 					question: "How many times a day do I make you smile or laugh? 😄",
+					gif: "https://media.giphy.com/media/kTCL4p7c4gDkc/giphy.gif", // El Risitas
 					options: [
 						"A ridiculous amount",
 						"Are you kidding? Constantly!",
@@ -122,6 +123,7 @@
 				},
 				{
 					question: "On a scale of 1 to 10, how good are our cuddles? 🧸",
+					gif: "https://media.giphy.com/media/l41lOD8U5gWzH6x4A/giphy.gif", // Cute cuddle
 					options: [
 						"10/10",
 						"100/10",
@@ -132,6 +134,7 @@
 				},
 				{
 					question: "If we were a movie genre, what would we be? 🎬",
+					gif: "https://media.giphy.com/media/26FLdmIp6wJr91JAI/giphy.gif", // Romantic movie
 					options: [
 						"Romantic Comedy",
 						"Epic Adventure",
@@ -156,6 +159,7 @@
 				// Render
 				questionContainer.innerHTML = `
 					<h2 class="question-text">${q.question}</h2>
+					${q.gif ? `<div class="question-gif-container"><img src="${q.gif}" class="question-gif" alt="Question GIF" /></div>` : ''}
 					<div class="options-grid">
 						${q.options.map((opt, idx) => `
 							<button class="option-btn" data-idx="${idx}">${opt}</button>
@@ -179,6 +183,7 @@
 				questionContainer.innerHTML = `
 					<div class="feedback-content">
 						<h2 class="points-text">+${randomPoints} Hearts! ❤️</h2>
+						${q.gif ? `<img src="${q.gif}" class="feedback-gif" alt="Reaction GIF" />` : ''}
 						<p class="reaction-text">${q.reaction}</p>
 						<button id="next-question-btn" class="btn btn-yes">Next Question ➡️</button>
 					</div>
@@ -408,6 +413,29 @@
 
 	.option-btn:active {
 		transform: scale(0.98);
+	}
+
+	/* GIF STYLES */
+	.question-gif-container {
+		display: flex;
+		justify-content: center;
+		margin-bottom: 1.5rem;
+	}
+
+	.question-gif {
+		max-width: 100%;
+		height: 180px; /* Fixed height for consistency */
+		object-fit: cover;
+		border-radius: 12px;
+		box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+	}
+
+	.feedback-gif {
+		max-width: 100%;
+		height: 160px;
+		border-radius: 12px;
+		margin-bottom: 1rem;
+		box-shadow: 0 4px 12px rgba(0,0,0,0.1);
 	}
 
 	/* FEEDBACK STATE STYLES */
