@@ -16,7 +16,7 @@
 	</head>
 	<body>
 		<div class="background">
-			<!-- Floating hearts background elements could go here -->
+			<!-- Floating hearts could go here -->
 		</div>
 
 		<main>
@@ -25,6 +25,10 @@
 					<h1 class="title">Will you be my Valentine? 🌹</h1>
 					<p class="subtitle">I promise to buy you chocolates!</p>
 					
+					<div class="gif-container">
+						<img id="main-gif" src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExM3R6eW55b3R6eW55b3R6eW55b3R6eW55b3R6eW55b3R6eW55b3/uTj883pL53y4t8q2pC/giphy.gif" alt="Cute puppy" />
+					</div>
+
 					<div class="buttons">
 						<button id="yes-btn" class="btn btn-yes">Yes, definitely!</button>
 						<button id="no-btn" class="btn btn-no">No</button>
@@ -50,26 +54,40 @@
 			const noBtn = document.getElementById('no-btn');
 			const questionCard = document.getElementById('question-card');
 			const successCard = document.getElementById('success-card');
+			const mainGif = document.getElementById('main-gif') as HTMLImageElement;
+
+			const HAPPY_GIF = "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExM3R6eW55b3R6eW55b3R6eW55b3R6eW55b3R6eW55b3R6eW55b3/uTj883pL53y4t8q2pC/giphy.gif";
+			const SAD_GIF = "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExM3R6eW55b3R6eW55b3R6eW55b3R6eW55b3R6eW55b3R6eW55b3/OPU6wzx8JrHna/giphy.gif";
 
 			// "No" button dodging logic
-			noBtn?.addEventListener('mouseenter', () => {
-				const x = Math.random() * (window.innerWidth - noBtn.offsetWidth);
-				const y = Math.random() * (window.innerHeight - noBtn.offsetHeight);
+			let isDodging = false;
+			const dodge = () => {
+				const x = Math.random() * (window.innerWidth - (noBtn?.offsetWidth || 100));
+				const y = Math.random() * (window.innerHeight - (noBtn?.offsetHeight || 50));
 				
-				noBtn.style.position = 'fixed';
-				noBtn.style.left = `${x}px`;
-				noBtn.style.top = `${y}px`;
-			});
+				if(noBtn) {
+					noBtn.style.position = 'fixed';
+					noBtn.style.left = `${x}px`;
+					noBtn.style.top = `${y}px`;
+				}
+				
+				if (mainGif && !isDodging) {
+					mainGif.src = SAD_GIF;
+					isDodging = true;
+				}
+			};
 
-			// Also dodge on click just in case
+			noBtn?.addEventListener('mouseenter', dodge);
 			noBtn?.addEventListener('click', (e) => {
 				e.preventDefault();
-				const x = Math.random() * (window.innerWidth - noBtn.offsetWidth);
-				const y = Math.random() * (window.innerHeight - noBtn.offsetHeight);
-				
-				noBtn.style.position = 'fixed';
-				noBtn.style.left = `${x}px`;
-				noBtn.style.top = `${y}px`;
+				dodge();
+			});
+
+			// Reset gif if they stop chasing the button for a while?
+			// Simpler: If they hover the YES button, make the dog happy again
+			yesBtn?.addEventListener('mouseenter', () => {
+				if(mainGif) mainGif.src = HAPPY_GIF;
+				isDodging = false;
 			});
 
 			// "Yes" button celebration logic
@@ -94,7 +112,6 @@
 
 					const particleCount = 50 * (timeLeft / duration);
 					
-					// since particles fall down, start a bit higher than random
 					confetti({ ...defaults, particleCount, origin: { x: randomInRange(0.1, 0.3), y: Math.random() - 0.2 } });
 					confetti({ ...defaults, particleCount, origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 } });
 				}, 250);
@@ -120,7 +137,7 @@
 		display: flex;
 		justify-content: center;
 		align-items: center;
-		overflow: hidden; /* Prevent scrollbars when button moves */
+		overflow: hidden;
 	}
 
 	main {
@@ -161,8 +178,23 @@
 	.subtitle {
 		font-size: 1.2rem;
 		color: var(--text);
-		margin-bottom: 2.5rem;
+		margin-bottom: 2rem;
 		font-weight: 500;
+	}
+
+	.gif-container {
+		margin-bottom: 2rem;
+		height: 200px; /* Fixed height to prevent layout jump */
+		display: flex;
+		align-items: center;
+		justify-content: center;
+	}
+
+	.gif-container img {
+		max-height: 100%;
+		max-width: 100%;
+		border-radius: 12px;
+		box-shadow: 0 4px 12px rgba(0,0,0,0.1);
 	}
 
 	.buttons {
@@ -170,7 +202,7 @@
 		gap: 1.5rem;
 		justify-content: center;
 		align-items: center;
-		position: relative; /* Context for absolute positioning if needed inside, though likely button goes fixed */
+		position: relative;
 	}
 
 	.btn {
@@ -205,7 +237,7 @@
 	.success-gif {
 		width: 100%;
 		border-radius: 16px;
-		margin-top: 1.5rem;
+		margin-top: 1rem;
 		box-shadow: 0 4px 12px rgba(0,0,0,0.1);
 	}
 </style>
