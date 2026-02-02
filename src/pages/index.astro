@@ -73,7 +73,7 @@
 			<div id="success-section" class="card hidden">
 				<div class="content">
 					<h1 class="title">Yay! ❤️</h1>
-					<p class="subtitle">Best decision ever! See you on the 14th!</p>
+					<p id="success-message" class="subtitle">Best decision ever! See you on the 14th!</p>
 					<div class="image-container">
 						<img src="/assets/aww-blushing.gif" alt="Happy dance" class="success-gif"/>
 					</div>
@@ -103,7 +103,10 @@
 				if (quizTitle) quizTitle.innerText = `Compatibility Quiz for ${partnerName} ❤️`;
 
 				const proposalTitle = document.getElementById('proposal-title');
-				if (proposalTitle) proposalTitle.innerText = `${partnerName}, Will you be my Valentine? 🌹`;
+				if (proposalTitle) proposalTitle.innerText = `Will you be my Valentine? 🌹`; // No change needed here logically based on previous reorder, but good to keep clean
+
+				const successMessage = document.getElementById('success-message');
+				if (successMessage) successMessage.innerText = `Best decision ever, ${partnerName}! See you on the 14th!`;
 			}
 
 
