@@ -165,11 +165,38 @@
 
 				// Attach listeners
 				document.querySelectorAll('.option-btn').forEach(btn => {
-					btn.addEventListener('click', () => handleAnswer());
+					btn.addEventListener('click', () => showFeedback());
 				});
 			}
 
-			function handleAnswer() {
+			function showFeedback() {
+				if (!questionContainer) return;
+				
+				const q = questions[state.currentQuestionIndex];
+				const randomPoints = Math.floor(Math.random() * 50) + 100; // 100-150 points
+
+				// Render Feedback View
+				questionContainer.innerHTML = `
+					<div class="feedback-content">
+						<h2 class="points-text">+${randomPoints} Hearts! ❤️</h2>
+						<p class="reaction-text">${q.reaction}</p>
+						<button id="next-question-btn" class="btn btn-yes">Next Question ➡️</button>
+					</div>
+				`;
+
+				// Attach listener to Next button
+				document.getElementById('next-question-btn')?.addEventListener('click', () => handleNext());
+				
+				// Small confetti for quick dopamine
+				confetti({
+					particleCount: 30,
+					spread: 50,
+					origin: { y: 0.7 },
+					colors: ['#ff4d6d', '#ff8fa3', '#ffffff']
+				});
+			}
+
+			function handleNext() {
 				state.currentQuestionIndex++;
 				
 				if (state.currentQuestionIndex < questions.length) {
@@ -381,6 +408,31 @@
 
 	.option-btn:active {
 		transform: scale(0.98);
+	}
+
+	/* FEEDBACK STATE STYLES */
+	.feedback-content {
+		animation: popIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+	}
+
+	@keyframes popIn {
+		from { opacity: 0; transform: scale(0.8); }
+		to { opacity: 1; transform: scale(1); }
+	}
+
+	.points-text {
+		font-family: 'Pacifico', cursive;
+		font-size: 2.5rem;
+		color: var(--primary);
+		margin-bottom: 0.5rem;
+		text-shadow: 2px 2px 0px white;
+	}
+
+	.reaction-text {
+		font-size: 1.3rem;
+		color: var(--text);
+		margin-bottom: 2rem;
+		line-height: 1.5;
 	}
 </style>
 
