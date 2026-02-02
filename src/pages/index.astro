@@ -189,6 +189,8 @@
 				
 				const q = questions[state.currentQuestionIndex];
 				const randomPoints = Math.floor(Math.random() * 50) + 100; // 100-150 points
+				const isLast = state.currentQuestionIndex === questions.length - 1;
+				const btnText = isLast ? "Calculate Results 💘" : "Next Question ➡️";
 
 				// Render Feedback View
 				questionContainer.innerHTML = `
@@ -196,7 +198,7 @@
 						<h2 class="points-text">+${randomPoints} Hearts! ❤️</h2>
 						${q.gif ? `<img src="${q.gif}" class="feedback-gif" alt="Reaction GIF" />` : ''}
 						<p class="reaction-text">${q.reaction}</p>
-						<button id="next-question-btn" class="option-btn" style="margin: 0 auto; margin-top: 1rem;">Next Question ➡️</button>
+						<button id="next-question-btn" class="option-btn" style="margin: 0 auto; margin-top: 1rem;">${btnText}</button>
 					</div>
 				`;
 
