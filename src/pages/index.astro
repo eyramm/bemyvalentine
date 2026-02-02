@@ -74,6 +74,12 @@
 					<div class="image-container">
 						<img src="/assets/aww-blushing.gif" alt="Happy dance" class="success-gif"/>
 					</div>
+					
+					<div class="calendar-actions">
+						<button id="google-cal-btn" class="btn-cal">📅 Google Cal</button>
+						<button id="apple-cal-btn" class="btn-cal">🍏 Apple Cal</button>
+					</div>
+
 					<button id="reset-btn" class="btn-reset">Start Over 🔄</button>
 				</div>
 			</div>
@@ -257,7 +263,7 @@
 
 					if (percent >= 100) {
 						clearInterval(interval);
-						if (text) text.innerText = "Analysis Complete! Reading fun fact... 🤓";
+						if (text) text.innerText = "Analysis Complete! Here's a fun fact...";
 						
 						// Explosion effect!
 						confetti({
@@ -353,6 +359,45 @@
 
 			// Yes button wins
 			yesBtn?.addEventListener('click', handleSuccess);
+
+			// --- CALENDAR LOGIC ---
+			const googleBtn = document.getElementById('google-cal-btn');
+			const appleBtn = document.getElementById('apple-cal-btn');
+			
+			const eventDetails = {
+				title: "Valentine's Date Night ❤️",
+				details: "The best date night ever!",
+				location: "Everywhere",
+				start: "20260214T190000", // Feb 14 2026, 7 PM
+				end: "20260214T230000"
+			};
+
+			googleBtn?.addEventListener('click', () => {
+				const url = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(eventDetails.title)}&details=${encodeURIComponent(eventDetails.details)}&location=${encodeURIComponent(eventDetails.location)}&dates=${eventDetails.start}/${eventDetails.end}`;
+				window.open(url, '_blank');
+			});
+
+			appleBtn?.addEventListener('click', () => {
+				const icsContent = `BEGIN:VCALENDAR
+VERSION:2.0
+BEGIN:VEVENT
+URL:${document.URL}
+DTSTART:${eventDetails.start}
+DTEND:${eventDetails.end}
+SUMMARY:${eventDetails.title}
+DESCRIPTION:${eventDetails.details}
+LOCATION:${eventDetails.location}
+END:VEVENT
+END:VCALENDAR`;
+
+				const blob = new Blob([icsContent], { type: 'text/calendar;charset=utf-8' });
+				const link = document.createElement('a');
+				link.href = window.URL.createObjectURL(blob);
+				link.setAttribute('download', 'valentines-date.ics');
+				document.body.appendChild(link);
+				link.click();
+				document.body.removeChild(link);
+			});
 
 			// Reset / Start Over
 			const resetBtn = document.getElementById('reset-btn');
@@ -559,6 +604,37 @@
 		background-color: #fff0f3;
 		color: var(--text);
 		box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+	}
+
+	/* CALENDAR BUTTONS */
+	.calendar-actions {
+		display: flex;
+		gap: 1rem;
+		justify-content: center;
+		margin-top: 1.5rem;
+	}
+
+	.btn-cal {
+		background: white;
+		border: 1px solid var(--primary);
+		color: var(--primary);
+		padding: 0.8rem 1.2rem;
+		border-radius: 12px;
+		font-weight: 600;
+		cursor: pointer;
+		font-size: 0.9rem;
+		display: flex;
+		align-items: center;
+		gap: 0.5rem;
+		transition: all 0.2s;
+		box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+	}
+
+	.btn-cal:hover {
+		background: var(--primary);
+		color: white;
+		transform: translateY(-2px);
+		box-shadow: 0 6px 12px rgba(255, 77, 109, 0.2);
 	}
 
 	.btn-reset {
