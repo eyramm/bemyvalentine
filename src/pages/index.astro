@@ -264,6 +264,9 @@
 					proposalSection.classList.remove('hidden');
 					const badge = document.getElementById('result-badge');
 					if(badge) badge.classList.remove('hidden');
+					
+					// Ensure main gif is set to happy start state
+					if(mainGif) mainGif.src = HAPPY_GIF;
 				}
 			}
 
@@ -271,37 +274,34 @@
 			const HAPPY_GIF = "/assets/bemy-valentine.gif";
 			const SAD_GIF = "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExM3R6eW55b3R6eW55b3R6eW55b3R6eW55b3R6eW55b3R6eW55b3/OPU6wzx8JrHna/giphy.gif";
 
-			let isDodging = false;
-			const dodge = () => {
-				const x = Math.random() * (window.innerWidth - (noBtn?.offsetWidth || 100));
-				const y = Math.random() * (window.innerHeight - (noBtn?.offsetHeight || 50));
+			// Spawn a new YES button
+			const spawnYesButton = () => {
+				const btn = document.createElement('button');
+				btn.innerText = "Yes, definitely!";
+				btn.className = "btn btn-yes";
+				btn.style.position = "fixed";
+				btn.style.zIndex = "100";
 				
-				if(noBtn) {
-					noBtn.style.position = 'fixed';
-					noBtn.style.left = `${x}px`;
-					noBtn.style.top = `${y}px`;
-				}
+				// Random position
+				const x = Math.random() * (window.innerWidth - 150);
+				const y = Math.random() * (window.innerHeight - 50);
+				btn.style.left = `${x}px`;
+				btn.style.top = `${y}px`;
 				
-				if (mainGif && !isDodging) {
-					mainGif.src = SAD_GIF;
-					isDodging = true;
-				}
+				// Add click handler to win
+				btn.addEventListener('click', handleSuccess);
+				
+				document.body.appendChild(btn);
 			};
 
-			noBtn?.addEventListener('mouseenter', dodge);
-			noBtn?.addEventListener('click', (e) => {
-				e.preventDefault();
-				dodge();
-			});
-
-			yesBtn?.addEventListener('mouseenter', () => {
-				if(mainGif) mainGif.src = HAPPY_GIF;
-				isDodging = false;
-			});
-
-			yesBtn?.addEventListener('click', () => {
+			const handleSuccess = () => {
 				if(proposalSection) proposalSection.style.display = 'none';
 				if(successSection) successSection.classList.remove('hidden');
+
+				// Remove all spawned buttons
+				document.querySelectorAll('.btn-yes').forEach(b => {
+					if(b.style.position === 'fixed') b.remove();
+				});
 
 				const duration = 15 * 1000;
 				const animationEnd = Date.now() + duration;
@@ -315,7 +315,17 @@
 					confetti({ ...defaults, particleCount, origin: { x: randomInRange(0.1, 0.3), y: Math.random() - 0.2 } });
 					confetti({ ...defaults, particleCount, origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 } });
 				}, 250);
+			};
+
+			// No button spawns more Yes buttons
+			noBtn?.addEventListener('click', (e) => {
+				e.preventDefault();
+				if (mainGif) mainGif.src = SAD_GIF;
+				spawnYesButton();
 			});
+
+			// Yes button wins
+			yesBtn?.addEventListener('click', handleSuccess);
 
 			// --- INIT ---
 			renderQuestion();
