@@ -483,6 +483,43 @@
 		margin-bottom: 2rem;
 		line-height: 1.5;
 	}
+
+	/* PROPOSAL BUTTONS (Moved to global for dynamic access) */
+	.buttons {
+		display: flex;
+		gap: 1.5rem;
+		justify-content: center;
+		align-items: center;
+		position: relative;
+	}
+
+	.btn {
+		border: none;
+		padding: 1rem 2rem;
+		font-size: 1.1rem;
+		font-weight: 600;
+		border-radius: 50px;
+		cursor: pointer;
+		transition: transform 0.2s, box-shadow 0.2s;
+	}
+
+	.btn-yes {
+		background-color: var(--primary);
+		color: white;
+		box-shadow: 0 4px 15px rgba(255, 77, 109, 0.4);
+	}
+
+	.btn-yes:hover {
+		transform: scale(1.05);
+		background-color: #d90429;
+		box-shadow: 0 6px 20px rgba(255, 77, 109, 0.6);
+	}
+
+	.btn-no {
+		background-color: #fff0f3;
+		color: var(--text);
+		box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+	}
 </style>
 
 <style>
@@ -620,42 +657,6 @@
 		max-width: 100%;
 		border-radius: 12px;
 		box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-	}
-
-	.buttons {
-		display: flex;
-		gap: 1.5rem;
-		justify-content: center;
-		align-items: center;
-		position: relative;
-	}
-
-	.btn {
-		border: none;
-		padding: 1rem 2rem;
-		font-size: 1.1rem;
-		font-weight: 600;
-		border-radius: 50px;
-		cursor: pointer;
-		transition: transform 0.2s, box-shadow 0.2s;
-	}
-
-	.btn-yes {
-		background-color: var(--primary);
-		color: white;
-		box-shadow: 0 4px 15px rgba(255, 77, 109, 0.4);
-	}
-
-	.btn-yes:hover {
-		transform: scale(1.05);
-		background-color: #d90429;
-		box-shadow: 0 6px 20px rgba(255, 77, 109, 0.6);
-	}
-
-	.btn-no {
-		background-color: #fff0f3;
-		color: var(--text);
-		box-shadow: 0 4px 15px rgba(0,0,0,0.05);
 	}
 
 	.success-gif {
