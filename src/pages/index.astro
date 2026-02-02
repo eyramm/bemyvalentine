@@ -286,13 +286,15 @@
 				element.innerHTML = Math.random() > 0.5 ? '❤️' : '🌹';
 				
 				element.style.left = Math.random() * 100 + 'vw';
-				element.style.animationDuration = Math.random() * 3 + 2 + 's';
+				element.style.animationDuration = Math.random() * 5 + 10 + 's'; // 10s - 15s (Much slower)
 				element.style.fontSize = Math.random() * 1.5 + 0.5 + 'rem';
 				
 				heartsContainer?.appendChild(element);
-				setTimeout(() => element.remove(), 5000);
+				
+				// Remove after animation (ensure timeout is longer than max animation duration)
+				setTimeout(() => element.remove(), 15000);
 			};
-			setInterval(createFallingElement, 300);
+			setInterval(createFallingElement, 500); // Add new one every 500ms
 
 		</script>
 	</body>
