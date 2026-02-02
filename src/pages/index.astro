@@ -43,6 +43,8 @@
 						<h3>Did you know? 📜</h3>
 						<p>The phrase "From your Valentine" comes from a legend about St. Valentine himself. Imprisoned for secretly marrying couples, he fell in love with the jailer's daughter and wrote her a farewell letter signed "From your Valentine" — the world's first Valentine card!</p>
 					</div>
+
+					<button id="see-results-btn" class="option-btn hidden" style="margin: 1.5rem auto 0 auto; width: auto; padding: 1rem 2rem;">See Results 💘</button>
 				</div>
 			</div>
 
@@ -236,10 +238,11 @@
 
 				const meterFill = document.getElementById('love-meter-fill');
 				const text = document.getElementById('calculating-text');
+				const resultsBtn = document.getElementById('see-results-btn');
 				
 				let percent = 0;
 				const interval = setInterval(() => {
-					percent += Math.floor(Math.random() * 5) + 1;
+					percent += Math.floor(Math.random() * 4) + 1;
 					if (percent > 100) percent = 100;
 					
 					if (meterFill) {
@@ -254,6 +257,8 @@
 
 					if (percent >= 100) {
 						clearInterval(interval);
+						if (text) text.innerText = "Analysis Complete! Reading fun fact... 🤓";
+						
 						// Explosion effect!
 						confetti({
 							particleCount: 100,
@@ -261,9 +266,21 @@
 							origin: { y: 0.6 }
 						});
 						
-						setTimeout(showProposal, 1500);
+						// Show manual button
+						if (resultsBtn) {
+							resultsBtn.classList.remove('hidden');
+							// Define handler to clear timeout
+							const clickHandler = () => {
+								clearTimeout(autoAdvance);
+								showProposal();
+							};
+							resultsBtn.addEventListener('click', clickHandler, { once: true });
+						}
+						
+						// Auto advance after 10s (gives time to read)
+						const autoAdvance = setTimeout(showProposal, 10000);
 					}
-				}, 50);
+				}, 60);
 			}
 
 			function showProposal() {
