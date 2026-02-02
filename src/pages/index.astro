@@ -38,6 +38,11 @@
 						<div class="love-meter-fill" id="love-meter-fill">0%</div>
 					</div>
 					<p id="calculating-text" class="subtitle">Analyzing joy factors...</p>
+					
+					<div class="fun-fact-box">
+						<h3>Did you know? 📜</h3>
+						<p>The phrase "From your Valentine" comes from a legend about St. Valentine himself. Imprisoned for secretly marrying couples, he fell in love with the jailer's daughter and wrote her a farewell letter signed "From your Valentine" — the world's first Valentine card!</p>
+					</div>
 				</div>
 			</div>
 
@@ -659,6 +664,32 @@
 		font-weight: bold;
 		font-size: 0.9rem;
 		transition: width 0.1s linear;
+	}
+
+	.fun-fact-box {
+		background: rgba(255, 255, 255, 0.4);
+		border-radius: 12px;
+		padding: 1rem;
+		margin-top: 1.5rem;
+		border: 1px dashed var(--secondary);
+		text-align: left;
+	}
+
+	.fun-fact-box h3 {
+		font-size: 1rem;
+		color: var(--primary);
+		margin: 0 0 0.5rem 0;
+		display: flex;
+		align-items: center;
+		gap: 0.5rem;
+	}
+
+	.fun-fact-box p {
+		font-size: 0.9rem;
+		color: var(--text);
+		margin: 0;
+		font-style: italic;
+		line-height: 1.4;
 	}
 
 	/* PROPOSAL STYLES */
