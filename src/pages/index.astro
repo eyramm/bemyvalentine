@@ -78,9 +78,10 @@
 						<img src="/assets/aww-blushing.gif" alt="Happy dance" class="success-gif"/>
 					</div>
 					
+					<p class="save-date-text">Save the date</p>
 					<div class="calendar-actions">
-						<button id="google-cal-btn" class="btn-cal">📅 Google Cal</button>
-						<button id="apple-cal-btn" class="btn-cal">🍏 Apple Cal</button>
+						<button id="google-cal-btn" class="btn-cal">Google Calendar</button>
+						<button id="apple-cal-btn" class="btn-cal">Apple Calendar</button>
 					</div>
 
 					<button id="reset-btn" class="btn-reset">Start Over 🔄</button>
@@ -824,9 +825,19 @@ END:VCALENDAR`;
 	}
 
 	.success-gif {
-		width: 100%;
+		height: 160px;
+		width: auto;
+		margin: 0 auto;
+		display: block;
 		border-radius: 16px;
 		margin-top: 1rem;
 		box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+	}
+
+	.save-date-text {
+		font-weight: 600;
+		color: var(--primary);
+		margin: 1.5rem 0 0.5rem 0;
+		font-size: 1.1rem;
 	}
 </style>
